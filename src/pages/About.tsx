@@ -26,10 +26,13 @@ export default function About() {
           {/* Primary Expertise */}
           <div className="mb-8 p-4 bg-gray-800/50 rounded-lg border border-blue-500/30">
             <h3 className="text-lg font-medium mb-3 text-blue-400 flex items-center">
-              <span className="mr-2">⭐</span> Full-Stack Web Development (Primary Focus)
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              Full-Stack Web Development (Primary Focus)
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Node.js', 'Express.js', 'MySQL', 'REST APIs', 'HTML/CSS', 'Tailwind CSS', 'CSS Modules', 'JWT Auth'].map(
+              {['React', 'Next.js', 'TypeScript', 'JavaScript', 'Node.js', 'Express.js', 'MySQL', 'REST APIs', 'HTML/CSS', 'Tailwind CSS', 'CSS Modules', 'JWT Auth', 'Flask', 'Jinja2'].map(
                 (skill) => (
                   <div
                     key={skill}
@@ -46,7 +49,7 @@ export default function About() {
           <div className="mb-6">
             <h3 className="text-lg font-medium mb-3 text-purple-400">Game & Software Development (Currently Learning)</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {['C++', 'C#', 'Unreal Engine 5', '.NET Framework', 'Visual Studio', 'Game Design', 'Windows Forms', 'Object-Oriented Programming'].map(
+              {['C++', 'C#', 'Unity', 'Unreal Engine 5', '.NET Framework', 'Visual Studio', 'Game Design', 'Windows Forms', 'Console Applications', 'OOP'].map(
                 (skill) => (
                   <div
                     key={skill}
