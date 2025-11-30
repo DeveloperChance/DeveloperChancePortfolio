@@ -1,0 +1,11 @@
+PLACEHOLDER - Replace this file with your actual resume PDF
+
+To add your resume:
+1. Save your resume as a PDF file
+2. Replace this file at: public/resume.pdf
+3. The download button on the About page will automatically serve your resume
+
+The button is configured to:
+- Download the file as "Chance_Byers_Resume.pdf"
+- Display a download icon
+- Be responsive on mobile and desktop
