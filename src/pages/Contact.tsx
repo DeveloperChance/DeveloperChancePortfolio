@@ -1,4 +1,38 @@
+import { useState } from 'react'
+
 export default function Contact() {
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormStatus('submitting')
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    try {
+      const response = await fetch('https://formspree.io/f/mpwvzygn', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        setFormStatus('success')
+        form.reset()
+        setTimeout(() => setFormStatus('idle'), 5000)
+      } else {
+        setFormStatus('error')
+        setTimeout(() => setFormStatus('idle'), 5000)
+      }
+    } catch (error) {
+      setFormStatus('error')
+      setTimeout(() => setFormStatus('idle'), 5000)
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold mb-8">Get In Touch</h1>
@@ -49,7 +83,7 @@ export default function Contact() {
       </div>
 
       <div className="bg-gray-800 rounded-lg p-8">
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-2">
               Name
@@ -57,6 +91,8 @@ export default function Contact() {
             <input
               type="text"
               id="name"
+              name="name"
+              required
               className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Your name"
             />
@@ -68,6 +104,8 @@ export default function Contact() {
             <input
               type="email"
               id="email"
+              name="email"
+              required
               className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="your.email@example.com"
             />
@@ -78,16 +116,34 @@ export default function Contact() {
             </label>
             <textarea
               id="message"
+              name="message"
               rows={5}
+              required
               className="w-full px-4 py-2 bg-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Your message..."
             />
           </div>
+          
+          {/* Success Message */}
+          {formStatus === 'success' && (
+            <div className="p-4 bg-green-900/50 border border-green-500 rounded-lg text-green-200">
+              Thank you! Your message has been sent successfully.
+            </div>
+          )}
+          
+          {/* Error Message */}
+          {formStatus === 'error' && (
+            <div className="p-4 bg-red-900/50 border border-red-500 rounded-lg text-red-200">
+              Oops! There was an error sending your message. Please try again.
+            </div>
+          )}
+          
           <button
             type="submit"
-            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition"
+            disabled={formStatus === 'submitting'}
+            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send Message
+            {formStatus === 'submitting' ? 'Sending...' : 'Send Message'}
           </button>
         </form>
       </div>
