@@ -1,8 +1,8 @@
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-6">About Me</h1>
-      <div className="space-y-4 text-gray-300">
+      <h1 className="text-4xl font-bold mb-6 break-words">About Me</h1>
+      <div className="space-y-4 text-gray-300 break-words">
         <p>
           Hello! I'm Chance Byers, a motivated game and software developer with an associate degree in game development. 
           I have a strong foundation in programming, design, and interactive systems, with experience building hobby and 
@@ -19,9 +19,51 @@ export default function About() {
           experiences with clean, maintainable code. Currently pursuing further education in game development and 
           software engineering, focusing on C++ and C# to expand my technical capabilities.
         </p>
+      </div>
+
+      {/* Education Section */}
+      <div className="mt-12 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+        <h2 className="text-2xl font-semibold mb-6 flex items-center break-words">
+          <svg className="w-6 h-6 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+          </svg>
+          Education
+        </h2>
         
+        <div className="space-y-6">
+          {/* Bachelor's Degree - In Progress */}
+          <div className="border-l-4 border-blue-500 pl-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+              <h3 className="text-xl font-medium text-white break-words">Bachelor of Science - Game Development</h3>
+              <span className="text-blue-400 text-sm mt-1 sm:mt-0 font-medium">In Progress</span>
+            </div>
+            <p className="text-blue-400 font-medium mb-2">Full Sail University</p>
+            <p className="text-gray-300 text-sm">
+              Advanced curriculum covering engine development, artificial intelligence, game architecture, and software engineering. 
+              Coursework includes computer graphics, systems programming, and developing complete, playable games from preproduction to finished product.
+            </p>
+          </div>
+
+          {/* Associates Degree - Completed */}
+          <div className="border-l-4 border-green-500 pl-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+              <h3 className="text-xl font-medium text-white break-words">Associate of Science - Game Development</h3>
+              <span className="text-gray-400 text-sm mt-1 sm:mt-0">2023</span>
+            </div>
+            <p className="text-green-400 font-medium mb-2 break-words">Full Sail University</p>
+            <p className="text-gray-300 text-sm">
+              Foundational program covering the complete game development cycle from concept to completion. 
+              Coursework in programming fundamentals, game design, interactive systems, and practical experience with Unity and Unreal Engine.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 text-gray-300">
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-6">Technical Skills</h2>
+          <h2 className="text-2xl font-semibold mb-6 break-words">Technical Skills</h2>
           
           {/* Primary Expertise */}
           <div className="mb-8 p-4 bg-gray-800/50 rounded-lg border border-blue-500/30">
