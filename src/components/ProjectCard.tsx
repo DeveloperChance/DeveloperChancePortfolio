@@ -1,4 +1,5 @@
 import { Project } from '../types/project'
+import { useState } from 'react'
 
 interface ProjectCardProps {
   project: Project
@@ -17,26 +18,28 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     featured,
   } = project
 
+  const [isExpanded, setIsExpanded] = useState(false)
+  const descriptionLimit = 124
+  const needsTruncation = description.length > descriptionLimit
+
   const statusColors = {
     'in-development': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
     completed: 'bg-green-500/20 text-green-400 border-green-500/30',
     maintained: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   }
 
+  const categoryColors = {
+    professional: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+    educational: 'bg-green-500/10 text-green-400 border-green-500/30',
+    hobby: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+  }
+
   return (
     <div
-      className={`bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition relative flex flex-col ${
-        featured ? 'border-2 border-blue-500/50' : ''
+      className={`bg-gray-800 rounded-lg p-6 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 relative flex flex-col ${
+        featured ? 'border-2 border-blue-500/50' : 'border border-gray-700'
       }`}
     >
-      {featured && !isPrivate && (
-        <div className="absolute top-3 right-3">
-          <span className="px-2 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
-            Featured
-          </span>
-        </div>
-      )}
-
       <div className="mb-4">
         <div className="flex items-start justify-between gap-3 mb-2">
           <h3 className="text-xl font-semibold flex-1">{title}</h3>
@@ -55,26 +58,63 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        {status && (
+        <div className="flex gap-2 items-center">
           <span
             className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${
-              statusColors[status] || ''
+              categoryColors[project.category]
             }`}
           >
-            {status === 'in-development'
-              ? 'In Development'
-              : status.charAt(0).toUpperCase() + status.slice(1)}
+            {project.category.charAt(0).toUpperCase() + project.category.slice(1)}
           </span>
-        )}
+          {status && (
+            <span
+              className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${
+                statusColors[status] || ''
+              }`}
+            >
+              {status === 'in-development'
+                ? 'In Development'
+                : status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
+          )}
+        </div>
       </div>
 
-      <p className="text-gray-400 mb-4 text-sm leading-relaxed">{description}</p>
+      <div className="mb-4">
+        <p className="text-gray-400 text-sm leading-relaxed">
+          {needsTruncation && !isExpanded
+            ? `${description.slice(0, descriptionLimit)}...`
+            : description}
+        </p>
+        {needsTruncation && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-blue-400 hover:text-blue-300 text-xs mt-2 transition-colors flex items-center gap-1"
+          >
+            {isExpanded ? (
+              <>
+                Show less
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </>
+            ) : (
+              <>
+                Read more
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </>
+            )}
+          </button>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
         {technologies.map((tech) => (
           <span
             key={tech}
-            className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs"
+            className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs hover:bg-blue-600/30 transition-colors"
           >
             {tech}
           </span>
