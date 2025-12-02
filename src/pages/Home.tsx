@@ -117,6 +117,29 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Project Statistics */}
+      <div className="mb-20">
+        <h2 className="text-3xl font-bold mb-8 text-center">By The Numbers</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-blue-500/50 transition-colors">
+            <div className="text-4xl font-bold text-blue-400 mb-2">7+</div>
+            <div className="text-gray-400 text-sm">Years of Development</div>
+          </div>
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-green-500/50 transition-colors">
+            <div className="text-4xl font-bold text-green-400 mb-2">10+</div>
+            <div className="text-gray-400 text-sm">Repositories</div>
+          </div>
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-purple-500/50 transition-colors">
+            <div className="text-4xl font-bold text-purple-400 mb-2">15+</div>
+            <div className="text-gray-400 text-sm">Technologies</div>
+          </div>
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-yellow-500/50 transition-colors">
+            <div className="text-4xl font-bold text-yellow-400 mb-2">100%</div>
+            <div className="text-gray-400 text-sm">Dedicated</div>
+          </div>
+        </div>
+      </div>
+
       {/* Featured Projects */}
       {featuredProjects.length > 0 && (
         <div className="mb-16">
