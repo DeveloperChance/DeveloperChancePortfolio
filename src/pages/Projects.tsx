@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { projects, projectsByCategory } from '../data/projects'
 import ProjectCard from '../components/ProjectCard'
+import ProjectCardSkeleton from '../components/ProjectCardSkeleton'
 
 type FilterType = 'all' | 'professional' | 'educational' | 'hobby'
 
@@ -8,6 +9,38 @@ export default function Projects() {
   const [categoryFilter, setCategoryFilter] = useState<FilterType>('all')
   const [techFilter, setTechFilter] = useState<string>('all')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    // Simulate loading projects
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cardId = entry.target.getAttribute('data-card-id')
+            if (cardId) {
+              setVisibleCards((prev) => new Set(prev).add(cardId))
+              observer.unobserve(entry.target)
+            }
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    )
+
+    const cards = document.querySelectorAll('[data-card-id]')
+    cards.forEach((card) => observer.observe(card))
+
+    return () => observer.disconnect()
+  }, [isLoading, categoryFilter, techFilter])
 
   // Get all unique technologies
   const allTechnologies = useMemo(() => {
@@ -193,7 +226,13 @@ export default function Projects() {
         )}
       </div>
 
-      {filteredProjects.length === 0 ? (
+      {isLoading ? (
+        <div className="grid md:grid-cols-2 gap-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <ProjectCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : filteredProjects.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-gray-400 text-lg mb-4">
             <svg
@@ -227,7 +266,13 @@ export default function Projects() {
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
                 {filteredByCategory.professional.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <div
+                    key={project.id}
+                    data-card-id={project.id}
+                    className={`transition-opacity duration-500 ${visibleCards.has(project.id) ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    <ProjectCard project={project} />
+                  </div>
                 ))}
               </div>
             </section>
@@ -246,7 +291,13 @@ export default function Projects() {
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredByCategory.educational.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <div
+                    key={project.id}
+                    data-card-id={project.id}
+                    className={`transition-opacity duration-500 ${visibleCards.has(project.id) ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    <ProjectCard project={project} />
+                  </div>
                 ))}
               </div>
             </section>
@@ -264,7 +315,13 @@ export default function Projects() {
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredByCategory.hobby.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
+                  <div
+                    key={project.id}
+                    data-card-id={project.id}
+                    className={`transition-opacity duration-500 ${visibleCards.has(project.id) ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    <ProjectCard project={project} />
+                  </div>
                 ))}
               </div>
             </section>

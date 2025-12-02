@@ -1,4 +1,48 @@
+import { useState, useEffect, useRef } from 'react'
+
 export default function About() {
+  const [introVisible, setIntroVisible] = useState(false)
+  const [educationVisible, setEducationVisible] = useState(false)
+  const [skillsVisible, setSkillsVisible] = useState(false)
+  const introRef = useRef<HTMLDivElement>(null)
+  const educationRef = useRef<HTMLDivElement>(null)
+  const skillsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observerOptions = { threshold: 0.1, rootMargin: '50px' }
+
+    const introObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setIntroVisible(true)
+        introObserver.disconnect()
+      }
+    }, observerOptions)
+
+    const educationObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setEducationVisible(true)
+        educationObserver.disconnect()
+      }
+    }, observerOptions)
+
+    const skillsObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setSkillsVisible(true)
+        skillsObserver.disconnect()
+      }
+    }, observerOptions)
+
+    if (introRef.current) introObserver.observe(introRef.current)
+    if (educationRef.current) educationObserver.observe(educationRef.current)
+    if (skillsRef.current) skillsObserver.observe(skillsRef.current)
+
+    return () => {
+      introObserver.disconnect()
+      educationObserver.disconnect()
+      skillsObserver.disconnect()
+    }
+  }, [])
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
@@ -14,7 +58,8 @@ export default function About() {
           Download Resume
         </a>
       </div>
-      <div className="space-y-4 text-gray-300 break-words">
+      <div className="space-y-4 text-gray-300 break-words" ref={introRef}>
+        <div className={`transition-opacity duration-700 ${introVisible ? 'opacity-100' : 'opacity-0'}`}>
         <p>
           Hello! I'm Chance Byers, a motivated game and software developer with an associate degree in game development. 
           I have a strong foundation in programming, design, and interactive systems, with experience building hobby and 
@@ -31,10 +76,12 @@ export default function About() {
           experiences with clean, maintainable code. Currently pursuing further education in game development and 
           software engineering, focusing on C++ and C# to expand my technical capabilities.
         </p>
+        </div>
       </div>
 
       {/* Education Section */}
-      <div className="mt-12 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+      <div className="mt-12 p-6 bg-gray-800/50 rounded-lg border border-gray-700" ref={educationRef}>
+        <div className={`transition-opacity duration-700 ${educationVisible ? 'opacity-100' : 'opacity-0'}`}>
         <h2 className="text-2xl font-semibold mb-6 flex items-center break-words">
           <svg className="w-6 h-6 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -71,10 +118,12 @@ export default function About() {
             </p>
           </div>
         </div>
+        </div>
       </div>
 
       <div className="space-y-4 text-gray-300">
-        <div className="mt-8">
+        <div className="mt-8" ref={skillsRef}>
+          <div className={`transition-opacity duration-700 ${skillsVisible ? 'opacity-100' : 'opacity-0'}`}>
           <h2 className="text-2xl font-semibold mb-6 break-words">Technical Skills</h2>
           
           {/* Primary Expertise */}
@@ -165,6 +214,7 @@ export default function About() {
                 )
               )}
             </div>
+          </div>
           </div>
         </div>
       </div>

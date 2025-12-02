@@ -1,8 +1,119 @@
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { featuredProjects } from '../data/projects'
 import ProjectCard from '../components/ProjectCard'
+import ProjectCardSkeleton from '../components/ProjectCardSkeleton'
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [yearsCount, setYearsCount] = useState(0)
+  const [reposCount, setReposCount] = useState(0)
+  const [techsCount, setTechsCount] = useState(0)
+  const [dedicationCount, setDedicationCount] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const [skillsVisible, setSkillsVisible] = useState(false)
+  const [statsVisible, setStatsVisible] = useState(false)
+  const [featuredVisible, setFeaturedVisible] = useState(false)
+  const statsRef = useRef<HTMLDivElement>(null)
+  const skillsRef = useRef<HTMLDivElement>(null)
+  const featuredRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Simulate loading featured project
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const observerOptions = { threshold: 0.1, rootMargin: '50px' }
+
+    const skillsObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setSkillsVisible(true)
+        skillsObserver.disconnect()
+      }
+    }, observerOptions)
+
+    const featuredObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setFeaturedVisible(true)
+        featuredObserver.disconnect()
+      }
+    }, observerOptions)
+
+    if (skillsRef.current) skillsObserver.observe(skillsRef.current)
+    if (featuredRef.current) featuredObserver.observe(featuredRef.current)
+
+    return () => {
+      skillsObserver.disconnect()
+      featuredObserver.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setStatsVisible(true)
+          setHasAnimated(true)
+          
+          // Animate years (7+)
+          const yearsDuration = 1000
+          const yearsTarget = 7
+          const yearsInterval = yearsDuration / yearsTarget
+          let yearsCounter = 0
+          const yearsTimer = setInterval(() => {
+            yearsCounter++
+            setYearsCount(yearsCounter)
+            if (yearsCounter >= yearsTarget) clearInterval(yearsTimer)
+          }, yearsInterval)
+
+          // Animate repos (10+)
+          const reposDuration = 1000
+          const reposTarget = 10
+          const reposInterval = reposDuration / reposTarget
+          let reposCounter = 0
+          const reposTimer = setInterval(() => {
+            reposCounter++
+            setReposCount(reposCounter)
+            if (reposCounter >= reposTarget) clearInterval(reposTimer)
+          }, reposInterval)
+
+          // Animate techs (15+)
+          const techsDuration = 1000
+          const techsTarget = 15
+          const techsInterval = techsDuration / techsTarget
+          let techsCounter = 0
+          const techsTimer = setInterval(() => {
+            techsCounter++
+            setTechsCount(techsCounter)
+            if (techsCounter >= techsTarget) clearInterval(techsTimer)
+          }, techsInterval)
+
+          // Animate dedication (100%)
+          const dedicationDuration = 1000
+          const dedicationTarget = 100
+          const dedicationInterval = dedicationDuration / 100
+          let dedicationCounter = 0
+          const dedicationTimer = setInterval(() => {
+            dedicationCounter++
+            setDedicationCount(dedicationCounter)
+            if (dedicationCounter >= dedicationTarget) clearInterval(dedicationTimer)
+          }, dedicationInterval)
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasAnimated])
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero Section */}
@@ -78,9 +189,9 @@ export default function Home() {
       </div>
 
       {/* Skills Highlights */}
-      <div className="mb-20">
+      <div className="mb-20" ref={skillsRef}>
         <h2 className="text-3xl font-bold mb-8 text-center">Core Technologies</h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className={`grid md:grid-cols-3 gap-6 transition-opacity duration-700 ${skillsVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="bg-gray-800 p-6 rounded-lg border border-blue-500/30">
             <div className="text-blue-400 mb-3">
               <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -118,23 +229,23 @@ export default function Home() {
       </div>
 
       {/* Project Statistics */}
-      <div className="mb-20">
+      <div className="mb-20" ref={statsRef}>
         <h2 className="text-3xl font-bold mb-8 text-center">By The Numbers</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 transition-opacity duration-700 ${statsVisible ? 'opacity-100' : 'opacity-0'}`}>
           <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-blue-500/50 transition-colors">
-            <div className="text-4xl font-bold text-blue-400 mb-2">7+</div>
+            <div className="text-4xl font-bold text-blue-400 mb-2">{yearsCount}+</div>
             <div className="text-gray-400 text-sm">Years of Development</div>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-green-500/50 transition-colors">
-            <div className="text-4xl font-bold text-green-400 mb-2">10+</div>
+            <div className="text-4xl font-bold text-green-400 mb-2">{reposCount}+</div>
             <div className="text-gray-400 text-sm">Repositories</div>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-purple-500/50 transition-colors">
-            <div className="text-4xl font-bold text-purple-400 mb-2">15+</div>
+            <div className="text-4xl font-bold text-purple-400 mb-2">{techsCount}+</div>
             <div className="text-gray-400 text-sm">Technologies</div>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center hover:border-yellow-500/50 transition-colors">
-            <div className="text-4xl font-bold text-yellow-400 mb-2">100%</div>
+            <div className="text-4xl font-bold text-yellow-400 mb-2">{dedicationCount}%</div>
             <div className="text-gray-400 text-sm">Dedicated</div>
           </div>
         </div>
@@ -142,12 +253,18 @@ export default function Home() {
 
       {/* Featured Projects */}
       {featuredProjects.length > 0 && (
-        <div className="mb-16">
+        <div className="mb-16" ref={featuredRef}>
           <h2 className="text-3xl font-bold mb-8 text-center">Featured Project</h2>
-          <div className="max-w-4xl mx-auto">
-            {featuredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+          <div className={`max-w-4xl mx-auto transition-opacity duration-700 ${featuredVisible ? 'opacity-100' : 'opacity-0'}`}>
+            {isLoading ? (
+              <ProjectCardSkeleton />
+            ) : (
+              <div>
+                {featuredProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            )}
           </div>
           <div className="text-center mt-8">
             <Link
