@@ -1,7 +1,49 @@
+import { useState, useMemo } from 'react'
 import { projects, projectsByCategory } from '../data/projects'
 import ProjectCard from '../components/ProjectCard'
 
+type FilterType = 'all' | 'professional' | 'educational' | 'hobby'
+
 export default function Projects() {
+  const [categoryFilter, setCategoryFilter] = useState<FilterType>('all')
+  const [techFilter, setTechFilter] = useState<string>('all')
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  // Get all unique technologies
+  const allTechnologies = useMemo(() => {
+    const techs = new Set<string>()
+    projects.forEach((project) => {
+      project.technologies.forEach((tech) => techs.add(tech))
+    })
+    return Array.from(techs).sort()
+  }, [])
+
+  // Filter projects based on selected filters
+  const filteredProjects = useMemo(() => {
+    let filtered = projects
+
+    // Filter by category
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter((p) => p.category === categoryFilter)
+    }
+
+    // Filter by technology
+    if (techFilter !== 'all') {
+      filtered = filtered.filter((p) => p.technologies.includes(techFilter))
+    }
+
+    return filtered
+  }, [categoryFilter, techFilter])
+
+  // Group filtered projects by category
+  const filteredByCategory = useMemo(() => {
+    return {
+      professional: filteredProjects.filter((p) => p.category === 'professional'),
+      educational: filteredProjects.filter((p) => p.category === 'educational'),
+      hobby: filteredProjects.filter((p) => p.category === 'hobby'),
+    }
+  }, [filteredProjects])
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
@@ -11,7 +53,147 @@ export default function Projects() {
         </p>
       </div>
 
-      {projects.length === 0 ? (
+      {/* Filters */}
+      <div className="mb-8">
+        {/* Filter Toggle Button */}
+        <button
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors mb-4"
+        >
+          <svg
+            className={`w-5 h-5 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+          <span className="font-medium">
+            {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
+          </span>
+          {(categoryFilter !== 'all' || techFilter !== 'all') && (
+            <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full">
+              {[categoryFilter !== 'all' ? 1 : 0, techFilter !== 'all' ? 1 : 0].reduce((a, b) => a + b)}
+            </span>
+          )}
+        </button>
+
+        {/* Collapsible Filter Content */}
+        {isFilterOpen && (
+          <div className="space-y-4 animate-fadeIn">
+            {/* Category Filter */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-400 mb-2">Filter by Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setCategoryFilter('all')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    categoryFilter === 'all'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  All Projects ({projects.length})
+                </button>
+                <button
+                  onClick={() => setCategoryFilter('professional')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    categoryFilter === 'professional'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Professional ({projectsByCategory.professional.length})
+                </button>
+                <button
+                  onClick={() => setCategoryFilter('educational')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    categoryFilter === 'educational'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Educational ({projectsByCategory.educational.length})
+                </button>
+                <button
+                  onClick={() => setCategoryFilter('hobby')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    categoryFilter === 'hobby'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Hobby ({projectsByCategory.hobby.length})
+                </button>
+              </div>
+            </div>
+
+            {/* Technology Filter */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-400 mb-2">Filter by Technology</h3>
+              <select
+                value={techFilter}
+                onChange={(e) => setTechFilter(e.target.value)}
+                className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                <option value="all">All Technologies</option>
+                {allTechnologies.map((tech) => (
+                  <option key={tech} value={tech}>
+                    {tech}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Active Filters Display */}
+            {(categoryFilter !== 'all' || techFilter !== 'all') && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-400">Active filters:</span>
+                {categoryFilter !== 'all' && (
+                  <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full flex items-center gap-2">
+                    {categoryFilter}
+                    <button
+                      onClick={() => setCategoryFilter('all')}
+                      className="hover:text-blue-300"
+                      aria-label="Remove category filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {techFilter !== 'all' && (
+                  <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full flex items-center gap-2">
+                    {techFilter}
+                    <button
+                      onClick={() => setTechFilter('all')}
+                      className="hover:text-blue-300"
+                      aria-label="Remove technology filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                <button
+                  onClick={() => {
+                    setCategoryFilter('all')
+                    setTechFilter('all')
+                  }}
+                  className="text-gray-400 hover:text-gray-300 underline ml-2"
+                >
+                  Clear all
+                </button>
+              </div>
+            )}
+
+            {/* Results Count */}
+            <div className="text-sm text-gray-400">
+              Showing {filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {filteredProjects.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-gray-400 text-lg mb-4">
             <svg
@@ -28,14 +210,14 @@ export default function Projects() {
                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
               />
             </svg>
-            <p className="text-xl">No projects yet</p>
-            <p className="text-gray-500 mt-2">Check back soon for my latest work!</p>
+            <p className="text-xl">No projects found</p>
+            <p className="text-gray-500 mt-2">Try adjusting your filters to see more results</p>
           </div>
         </div>
       ) : (
         <div className="space-y-12">
           {/* Professional Projects */}
-          {projectsByCategory.professional.length > 0 && (
+          {filteredByCategory.professional.length > 0 && (
             <section>
               <h2 className="text-2xl font-semibold mb-6 flex items-center">
                 <svg className="w-6 h-6 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +226,7 @@ export default function Projects() {
                 Professional Projects
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {projectsByCategory.professional.map((project) => (
+                {filteredByCategory.professional.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
@@ -52,7 +234,7 @@ export default function Projects() {
           )}
 
           {/* Educational Projects */}
-          {projectsByCategory.educational.length > 0 && (
+          {filteredByCategory.educational.length > 0 && (
             <section>
               <h2 className="text-2xl font-semibold mb-6 flex items-center">
                 <svg className="w-6 h-6 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +245,7 @@ export default function Projects() {
                 Educational Projects
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projectsByCategory.educational.map((project) => (
+                {filteredByCategory.educational.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
@@ -71,7 +253,7 @@ export default function Projects() {
           )}
 
           {/* Hobby Projects */}
-          {projectsByCategory.hobby.length > 0 && (
+          {filteredByCategory.hobby.length > 0 && (
             <section>
               <h2 className="text-2xl font-semibold mb-6 flex items-center">
                 <svg className="w-6 h-6 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +263,7 @@ export default function Projects() {
                 Hobby Projects
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projectsByCategory.hobby.map((project) => (
+                {filteredByCategory.hobby.map((project) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
               </div>
