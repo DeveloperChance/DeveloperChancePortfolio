@@ -1,9 +1,9 @@
-export default function Index() {
+export default function Projects() {
 	return (
 		<div>
 			<p>Hello World!</p>
 			<p>Portfolio Project</p>
-      <p>Index Page</p>
+			<p>Projects Page</p>
 		</div>
 	)
 }

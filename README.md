@@ -26,9 +26,15 @@ DeveloperChancePortfolio/
 │   │       ├── react.svg       # React SVG
 │   │       └── vite.svg        # Vite SVG
 │   ├── components/
+│   │   ├── header.tsx          # Site Header / Nav
+│   │   ├── footer.tsx          # Site Footer
 │   │   └── layout.tsx          # Shared Page Layout
 │   ├── pages/
-│   │   └── index.tsx           # Home Page
+│   │   ├── index.tsx           # Home Page
+│   │   ├── about.tsx           # About Page
+│   │   ├── projects.tsx        # Projects Page
+│   │   ├── contact.tsx         # Contact Page
+│   │   └── notfound.tsx        # 404 Page
 │   ├── App.tsx                 # Main App / Routing Config
 │   ├── main.tsx                # App Entry Point
 │   └── index.css               # Global Styles
