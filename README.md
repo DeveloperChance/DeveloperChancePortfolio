@@ -29,12 +29,18 @@ DeveloperChancePortfolio/
 │   │   ├── header.tsx          # Site Header / Nav
 │   │   ├── footer.tsx          # Site Footer
 │   │   └── layout.tsx          # Shared Page Layout
+│   ├── data/
+│   │   ├── projects.ts         # Project Entries (Project[])
+│   │   └── technologies.ts     # Shared Technology Registry
 │   ├── pages/
 │   │   ├── index.tsx           # Home Page
 │   │   ├── about.tsx           # About Page
 │   │   ├── projects.tsx        # Projects Page
 │   │   ├── contact.tsx         # Contact Page
 │   │   └── notfound.tsx        # 404 Page
+│   ├── types/
+│   │   ├── project.ts          # Project Interface
+│   │   └── tech.ts             # Technology Interface
 │   ├── App.tsx                 # Main App / Routing Config
 │   ├── main.tsx                # App Entry Point
 │   └── index.css               # Global Styles
