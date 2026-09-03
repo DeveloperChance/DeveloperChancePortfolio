@@ -9,6 +9,7 @@ A modern and responsive portfolio website built with React, TypeScript, and Tail
 - **Vite 8.2.2** - Build Tool / Dev Server
 - **React Router 8.3.1** - Client-Side Routing
 - **Tailwind CSS 4.3.3** - CSS Framework
+- **Fontsource** - Web Fonts (Inter, JetBrains Mono)
 - **OXLint 1.79** - Code Quality / Consistency
 
 ## Project Structure
