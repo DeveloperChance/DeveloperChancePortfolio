@@ -27,6 +27,7 @@ DeveloperChancePortfolio/
 │   │       ├── react.svg       # React SVG
 │   │       └── vite.svg        # Vite SVG
 │   ├── components/
+│   │   ├── background.tsx      # Animated Background (Grid, Shapes, Paths)
 │   │   ├── header.tsx          # Site Header / Nav
 │   │   ├── footer.tsx          # Site Footer
 │   │   └── layout.tsx          # Shared Page Layout
@@ -39,7 +40,10 @@ DeveloperChancePortfolio/
 │   │   ├── projects.tsx        # Projects Page
 │   │   ├── contact.tsx         # Contact Page
 │   │   └── notfound.tsx        # 404 Page
+│   ├── services/
+│   │   └── background.ts       # Background Generation / Helper Logic
 │   ├── types/
+│   │   ├── background.ts       # Background Shape / Path Types
 │   │   ├── project.ts          # Project Interface
 │   │   └── tech.ts             # Technology Interface
 │   ├── App.tsx                 # Main App / Routing Config
